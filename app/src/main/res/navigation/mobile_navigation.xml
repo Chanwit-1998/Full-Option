@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.druk.ai_offline_llm.conversation.ConversationFragment"
+        android:label="@string/conversations">
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/nav_settings"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_bottom" />
+        <action
+            android:id="@+id/action_home_to_models"
+            app:destination="@id/nav_models" />
+        <action
+            android:id="@+id/action_home_to_ai_skills"
+            app:destination="@id/nav_ai_skills" />
+        <action
+            android:id="@+id/action_home_to_cartridge_store"
+            app:destination="@id/nav_cartridge_store" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_cartridge_store"
+        android:name="com.druk.ai_offline_llm.cartridge.CartridgeStoreFragment"
+        android:label="ร้านค้าตลับ AI" />
+
+    <fragment
+        android:id="@+id/nav_ai_skills"
+        android:name="com.druk.ai_offline_llm.settings.AiSkillsFragment"
+        android:label="@string/menu_ai_skills" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.druk.ai_offline_llm.settings.SettingsFragment"
+        android:label="@string/settings">
+        <argument
+            android:name="open_detail"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_settings_to_models"
+            app:destination="@id/nav_models" />
+        <action
+            android:id="@+id/action_settings_to_tools"
+            app:destination="@id/nav_tools" />
+        <action
+            android:id="@+id/action_settings_to_sound_haptic"
+            app:destination="@id/nav_sound_haptic" />
+        <action
+            android:id="@+id/action_settings_to_advanced"
+            app:destination="@id/nav_advanced" />
+        <action
+            android:id="@+id/action_settings_to_faq"
+            app:destination="@id/nav_faq" />
+        <action
+            android:id="@+id/action_settings_to_privacy_policy"
+            app:destination="@id/nav_privacy_policy" />
+        <action
+            android:id="@+id/action_settings_to_open_source_licenses"
+            app:destination="@id/nav_open_source_licenses" />
+        <action
+            android:id="@+id/action_settings_to_system_prompts"
+            app:destination="@id/nav_system_prompts" />
+        <action
+            android:id="@+id/action_settings_to_language"
+            app:destination="@id/nav_language" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_system_prompts"
+        android:name="com.druk.ai_offline_llm.settings.SystemPromptsFragment"
+        android:label="System Prompts" />
+
+    <fragment
+        android:id="@+id/nav_models"
+        android:name="com.druk.ai_offline_llm.storage.ModelsFragment"
+        android:label="@string/models">
+        <action
+            android:id="@+id/action_models_to_cartridge_store"
+            app:destination="@id/nav_cartridge_store" />
+        <argument
+            android:name="mode"
+            android:defaultValue="all"
+            app:argType="string" />
+        <argument
+            android:name="active_model_filename"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_faq"
+        android:name="com.druk.ai_offline_llm.settings.FaqFragment"
+        android:label="@string/faq" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.druk.ai_offline_llm.settings.ToolsFragment"
+        android:label="@string/tools" />
+
+    <fragment
+        android:id="@+id/nav_sound_haptic"
+        android:name="com.druk.ai_offline_llm.settings.SoundHapticFragment"
+        android:label="@string/sound_and_haptic" />
+
+    <fragment
+        android:id="@+id/nav_advanced"
+        android:name="com.druk.ai_offline_llm.settings.AdvancedFragment"
+        android:label="@string/advanced" />
+
+    <fragment
+        android:id="@+id/nav_privacy_policy"
+        android:name="com.druk.ai_offline_llm.settings.PrivacyPolicyFragment"
+        android:label="@string/privacy_policy" />
+
+    <fragment
+        android:id="@+id/nav_open_source_licenses"
+        android:name="com.druk.ai_offline_llm.settings.OpenSourceLicensesFragment"
+        android:label="ใบอนุญาตโอเพนซอร์ส" />
+
+    <fragment
+        android:id="@+id/nav_language"
+        android:name="com.druk.ai_offline_llm.settings.LanguageFragment"
+        android:label="@string/language" />
+
+<fragment android:id="@+id/nav_file_manager" android:name="com.fulloption.app.files.FileManagerFragment" android:label="ตัวจัดการไฟล์" /><fragment android:id="@+id/nav_media_player" android:name="com.fulloption.app.media.MediaWorkspaceFragment" android:label="เครื่องเล่นสื่อ" /><fragment android:id="@+id/nav_code_editor" android:name="com.fulloption.app.editor.CodeEditorFragment" android:label="แก้ไขโค้ด" /></navigation>
