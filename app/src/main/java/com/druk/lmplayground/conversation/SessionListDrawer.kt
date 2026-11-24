@@ -36,7 +36,10 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -82,7 +85,10 @@ fun SessionListDrawer(
     onModelStoreClicked: () -> Unit = {},
     onCartridgeStoreClicked: () -> Unit = {},
     onAiSkillsClicked: () -> Unit = {},
-    onNewChatClicked: () -> Unit = {}, onFiles: () -> Unit = {}, onMedia: () -> Unit = {}, onCode: () -> Unit = {}
+    onNewChatClicked: () -> Unit = {},
+    onFiles: () -> Unit = {},
+    onMedia: () -> Unit = {},
+    onCode: () -> Unit = {}
 ) {
     ModalDrawerSheet(
         modifier = Modifier.width(304.dp),
@@ -98,7 +104,11 @@ fun SessionListDrawer(
             onModelsClicked = onModelsClicked,
             onAiSkillsClicked = onAiSkillsClicked,
             onSettingsClicked = onSettingsClicked,
-            onNewChatClicked = onNewChatClicked, onFiles = onFiles, onMedia = onMedia, onCode = onCode)
+            onNewChatClicked = onNewChatClicked,
+            onFiles = onFiles,
+            onMedia = onMedia,
+            onCode = onCode
+        )
     }
 }
 
@@ -115,7 +125,10 @@ fun PermanentSessionList(
     onModelStoreClicked: () -> Unit = {},
     onCartridgeStoreClicked: () -> Unit = {},
     onAiSkillsClicked: () -> Unit = {},
-    onNewChatClicked: () -> Unit = {}, onFiles: () -> Unit = {}, onMedia: () -> Unit = {}, onCode: () -> Unit = {},
+    onNewChatClicked: () -> Unit = {},
+    onFiles: () -> Unit = {},
+    onMedia: () -> Unit = {},
+    onCode: () -> Unit = {},
     width: Dp = 320.dp
 ) {
     PermanentDrawerSheet(
@@ -141,7 +154,11 @@ fun PermanentSessionList(
                 onModelsClicked = onModelsClicked,
                 onAiSkillsClicked = onAiSkillsClicked,
                 onSettingsClicked = onSettingsClicked,
-                onNewChatClicked = onNewChatClicked, onFiles = onFiles, onMedia = onMedia, onCode = onCode, compact = true,
+                onNewChatClicked = onNewChatClicked,
+                onFiles = onFiles,
+                onMedia = onMedia,
+                onCode = onCode,
+                compact = true,
             )
         }
     }
@@ -159,7 +176,10 @@ private fun SessionListContent(
     onModelsClicked: () -> Unit,
     onAiSkillsClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
-    onNewChatClicked: () -> Unit, onFiles: () -> Unit = {}, onMedia: () -> Unit = {}, onCode: () -> Unit = {},
+    onNewChatClicked: () -> Unit,
+    onFiles: () -> Unit = {},
+    onMedia: () -> Unit = {},
+    onCode: () -> Unit = {},
     compact: Boolean = false
 ) {
     var contextMenuSessionId by remember { mutableStateOf<String?>(null) }
@@ -205,11 +225,25 @@ private fun SessionListContent(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             DrawerNavMenuItem(
+                icon = Icons.Outlined.Folder,
+                title = "ตัวจัดการไฟล์",
+                onClick = onFiles
+            )
+            DrawerNavMenuItem(
+                icon = Icons.Outlined.MusicNote,
+                title = "เครื่องเล่นเพลง & วิดีโอ",
+                onClick = onMedia
+            )
+            DrawerNavMenuItem(
+                icon = Icons.Outlined.Code,
+                title = "เครื่องมือแก้ไขโค้ด",
+                onClick = onCode
+            )
+            DrawerNavMenuItem(
                 icon = Icons.Outlined.WorkOutline,
-                title = "เลือกโมเดล AI", onClick = onModelsClicked)
-            DrawerNavMenuItem(icon = Icons.Outlined.Folder, title = "ตัวจัดการไฟล์", onClick = onFiles)
-            DrawerNavMenuItem(icon = Icons.Outlined.MusicNote, title = "เครื่องเล่นเพลง & วิดีโอ", onClick = onMedia)
-            DrawerNavMenuItem(icon = Icons.Outlined.Code, title = "เครื่องมือแก้ไขโค้ด", onClick = onCode
+                title = "เลือกโมเดล AI",
+                onClick = onModelsClicked
+            )
             DrawerNavMenuItem(
                 icon = Icons.Outlined.AutoAwesome,
                 title = stringResource(R.string.menu_ai_skills),
