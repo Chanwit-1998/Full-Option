@@ -245,14 +245,6 @@ fun ModelsContent(
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
     var downloadChoiceModel by remember { mutableStateOf<ModelInfo?>(null) }
     var bagTab by remember { mutableIntStateOf(0) }
-    val bagContext = LocalContext.current
-        if (uri != null) {
-                .onSuccess { imported ->
-                    Toast.makeText(bagContext, "นำเข้าตลับ ${imported.name} สำเร็จ!", Toast.LENGTH_SHORT).show()
-                }
-                .onFailure { Toast.makeText(bagContext, "ไฟล์ตลับไม่ถูกต้อง: ${it.message}", Toast.LENGTH_LONG).show() }
-        }
-    }
 
     LaunchedEffect(snackbarMessage) {
         if (snackbarMessage != null) {
