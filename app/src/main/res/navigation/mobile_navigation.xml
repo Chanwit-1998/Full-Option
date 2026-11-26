@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mobile_navigation"
@@ -22,15 +21,7 @@
         <action
             android:id="@+id/action_home_to_ai_skills"
             app:destination="@id/nav_ai_skills" />
-        <action
-            android:id="@+id/action_home_to_cartridge_store"
-            app:destination="@id/nav_cartridge_store" />
     </fragment>
-
-    <fragment
-        android:id="@+id/nav_cartridge_store"
-        android:name="com.druk.ai_offline_llm.cartridge.CartridgeStoreFragment"
-        android:label="ร้านค้าตลับ AI" />
 
     <fragment
         android:id="@+id/nav_ai_skills"
@@ -84,9 +75,6 @@
         android:id="@+id/nav_models"
         android:name="com.druk.ai_offline_llm.storage.ModelsFragment"
         android:label="@string/models">
-        <action
-            android:id="@+id/action_models_to_cartridge_store"
-            app:destination="@id/nav_cartridge_store" />
         <argument
             android:name="mode"
             android:defaultValue="all"
@@ -133,4 +121,9 @@
         android:name="com.druk.ai_offline_llm.settings.LanguageFragment"
         android:label="@string/language" />
 
-<fragment android:id="@+id/nav_file_manager" android:name="com.fulloption.app.files.FileManagerFragment" android:label="ตัวจัดการไฟล์" /><fragment android:id="@+id/nav_media_player" android:name="com.fulloption.app.media.MediaWorkspaceFragment" android:label="เครื่องเล่นสื่อ" /><fragment android:id="@+id/nav_code_editor" android:name="com.fulloption.app.editor.CodeEditorFragment" android:label="แก้ไขโค้ด" /></navigation>
+    <fragment
+        android:id="@+id/nav_code_editor"
+        android:name="com.fulloption.app.editor.CodeEditorFragment"
+        android:label="แก้ไขโค้ด" />
+
+</navigation>

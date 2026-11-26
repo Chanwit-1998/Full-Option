@@ -83,7 +83,7 @@ fun SessionListDrawer(
     onSettingsClicked: () -> Unit,
     onModelsClicked: () -> Unit = {},
     onModelStoreClicked: () -> Unit = {},
-    onCartridgeStoreClicked: () -> Unit = {},
+    
     onAiSkillsClicked: () -> Unit = {},
     onNewChatClicked: () -> Unit = {},
     onFiles: () -> Unit = {},
@@ -123,7 +123,7 @@ fun PermanentSessionList(
     onSettingsClicked: () -> Unit,
     onModelsClicked: () -> Unit = {},
     onModelStoreClicked: () -> Unit = {},
-    onCartridgeStoreClicked: () -> Unit = {},
+    
     onAiSkillsClicked: () -> Unit = {},
     onNewChatClicked: () -> Unit = {},
     onFiles: () -> Unit = {},

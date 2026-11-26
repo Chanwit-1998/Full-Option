@@ -33,7 +33,6 @@ import com.druk.ai_offline_llm.download.DownloadRepository
 import com.druk.ai_offline_llm.rag.DocumentTextExtractor
 import com.druk.ai_offline_llm.rag.DocumentTextExtractors
 import com.druk.ai_offline_llm.rag.RagPromptBuilder
-import com.druk.ai_offline_llm.cartridge.CartridgeManager
 import com.druk.ai_offline_llm.rag.RagRepository
 import com.druk.ai_offline_llm.storage.StoragePreferences
 import com.druk.ai_offline_llm.storage.StorageRepository
@@ -1127,30 +1126,30 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val enrichedPrompt = BuiltInOfflineTools.buildEnrichedPrompt(userText)
         val contextSize = _generationParams.value?.contextSize ?: 4096
         val totalBudget = minOf(RagPromptBuilder.budgetChars(contextSize), InferenceLimits.MAX_PAYLOAD_BYTES / 2 - enrichedPrompt.length - 500)
-        val cartridgeEntries = if (totalBudget > 200) {
-            runCatching { CartridgeManager.retrieveKnowledge(app, userText, totalBudget / 2) }.getOrDefault(emptyList())
-        } else emptyList()
-        val prevUserTurn = uiState.messages
-            .dropLast(2)
-            .lastOrNull { it.author == "User" }
-            ?.content
-            ?.trim()
-            ?.take(160)
-        val retrievalQuery = if (!prevUserTurn.isNullOrEmpty() && userText.length < 80) {
-            "$prevUserTurn $userText"
-        } else {
-            userText
-        }
-        val docChunks = try {
-            val rag = ragRepository
-            if (totalBudget > 200 && rag != null && rag.hasReadyDocuments(sessionId)) rag.retrieve(sessionId, retrievalQuery) else emptyList()
-        } catch (t: Throwable) { emptyList() }
-        if (cartridgeEntries.isEmpty() && docChunks.isEmpty()) return enrichedPrompt
-        if (cartridgeEntries.isEmpty()) return RagPromptBuilder.build(enrichedPrompt, docChunks, totalBudget)
-        val sb = StringBuilder("Use the following reference knowledge to answer accurately. If not covered, say so clearly.\n\n")
-        for ((cartName, entry) in cartridgeEntries) {
-            sb.append("[Knowledge Cartridge: ").append(cartName).append(" — ").append(entry.topic).append("]\n").append(entry.content).append("\n\n")
-        }
+//         val cartridgeEntries = if (totalBudget > 200) {
+//             runCatching { CartridgeManager.retrieveKnowledge(app, userText, totalBudget / 2) }.getOrDefault(emptyList())
+//         } else emptyList()
+//         val prevUserTurn = uiState.messages
+//             .dropLast(2)
+//             .lastOrNull { it.author == "User" }
+//             ?.content
+//             ?.trim()
+//             ?.take(160)
+//         val retrievalQuery = if (!prevUserTurn.isNullOrEmpty() && userText.length < 80) {
+//             "$prevUserTurn $userText"
+//         } else {
+//             userText
+//         }
+//         val docChunks = try {
+//             val rag = ragRepository
+//             if (totalBudget > 200 && rag != null && rag.hasReadyDocuments(sessionId)) rag.retrieve(sessionId, retrievalQuery) else emptyList()
+//         } catch (t: Throwable) { emptyList() }
+//         if (cartridgeEntries.isEmpty() && docChunks.isEmpty()) return enrichedPrompt
+//         if (cartridgeEntries.isEmpty()) return RagPromptBuilder.build(enrichedPrompt, docChunks, totalBudget)
+//         val sb = StringBuilder("Use the following reference knowledge to answer accurately. If not covered, say so clearly.\n\n")
+//         for ((cartName, entry) in cartridgeEntries) {
+//             sb.append("[Knowledge Cartridge: ").append(cartName).append(" — ").append(entry.topic).append("]\n").append(entry.content).append("\n\n")
+//         }
         val rem = totalBudget - sb.length
         if (docChunks.isNotEmpty() && rem > 200) sb.append(RagPromptBuilder.build(enrichedPrompt, docChunks, rem))
         else sb.append(enrichedPrompt)

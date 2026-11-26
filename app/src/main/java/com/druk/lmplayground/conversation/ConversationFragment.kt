@@ -88,7 +88,6 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.druk.ai_offline_llm.cartridge.*
 import com.druk.ai_offline_llm.dictation.DictationState
 import kotlinx.coroutines.launch
 
@@ -303,18 +302,18 @@ class ConversationFragment : Fragment() {
             val sessionModelHint by viewModel.sessionModelHint.observeAsState()
             val visionModuleHint by viewModel.visionModuleHint.observeAsState()
             val systemPrompt by viewModel.systemPrompt.observeAsState("")
-            val cartridgeContext = LocalContext.current
-            var activeCartridge by remember { mutableStateOf(CartridgeManager.getActiveCartridge(cartridgeContext)) }
-            val insertCartridgeAction: (AiCartridge) -> Unit = { cartridge ->
-                CartridgeManager.setActiveCartridgeId(cartridgeContext, cartridge.id)
-                activeCartridge = cartridge
-                Toast.makeText(cartridgeContext, "เสียบตลับความรู้: ${cartridge.name} (${cartridge.knowledge.size} หัวข้อ)", Toast.LENGTH_SHORT).show()
-            }
-            val ejectCartridgeAction: () -> Unit = {
-                CartridgeManager.setActiveCartridgeId(cartridgeContext, null)
-                activeCartridge = null
-                Toast.makeText(cartridgeContext, "ถอดตลับข้อมูลออกแล้ว", Toast.LENGTH_SHORT).show()
-            }
+//             val cartridgeContext = LocalContext.current
+//             var activeCartridge by remember { mutableStateOf(CartridgeManager.getActiveCartridge(cartridgeContext)) }
+//             val insertCartridgeAction: (AiCartridge) -> Unit = { cartridge ->
+//                 CartridgeManager.setActiveCartridgeId(cartridgeContext, cartridge.id)
+//                 activeCartridge = cartridge
+//                 Toast.makeText(cartridgeContext, "เสียบตลับความรู้: ${cartridge.name} (${cartridge.knowledge.size} หัวข้อ)", Toast.LENGTH_SHORT).show()
+//             }
+//             val ejectCartridgeAction: () -> Unit = {
+//                 CartridgeManager.setActiveCartridgeId(cartridgeContext, null)
+//                 activeCartridge = null
+//                 Toast.makeText(cartridgeContext, "ถอดตลับข้อมูลออกแล้ว", Toast.LENGTH_SHORT).show()
+//             }
             val systemPromptId by viewModel.systemPromptId.observeAsState()
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
             val userError by viewModel.userError.observeAsState()
@@ -522,18 +521,18 @@ class ConversationFragment : Fragment() {
                         Toast.makeText(toastContext, R.string.persona_applied_toast, Toast.LENGTH_SHORT).show()
                     }
                 }
-                val insertedCartridgeId by (navBackStackEntry?.savedStateHandle?.getLiveData<String>("insert_cartridge_id")?.observeAsState() ?: remember { mutableStateOf(null) })
-                LaunchedEffect(insertedCartridgeId) {
-                    val cId = insertedCartridgeId ?: return@LaunchedEffect
-                    navBackStackEntry?.savedStateHandle?.remove<String>("insert_cartridge_id")
-                    CartridgeManager.getAllAvailableCartridges(cartridgeContext).find { it.id == cId }?.let { insertCartridgeAction(it) }
-                }
-                val ejectCartridgeRequested by (navBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("eject_cartridge_requested")?.observeAsState() ?: remember { mutableStateOf(null) })
-                LaunchedEffect(ejectCartridgeRequested) {
-                    if (ejectCartridgeRequested == true) {
-                        navBackStackEntry?.savedStateHandle?.remove<Boolean>("eject_cartridge_requested")
-                        activeCartridge = null
-                    }
+//                 val insertedCartridgeId by (navBackStackEntry?.savedStateHandle?.getLiveData<String>("insert_cartridge_id")?.observeAsState() ?: remember { mutableStateOf(null) })
+//                 LaunchedEffect(insertedCartridgeId) {
+//                     val cId = insertedCartridgeId ?: return@LaunchedEffect
+//                     navBackStackEntry?.savedStateHandle?.remove<String>("insert_cartridge_id")
+//                     CartridgeManager.getAllAvailableCartridges(cartridgeContext).find { it.id == cId }?.let { insertCartridgeAction(it) }
+//                 }
+//                 val ejectCartridgeRequested by (navBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("eject_cartridge_requested")?.observeAsState() ?: remember { mutableStateOf(null) })
+//                 LaunchedEffect(ejectCartridgeRequested) {
+//                     if (ejectCartridgeRequested == true) {
+//                         navBackStackEntry?.savedStateHandle?.remove<Boolean>("eject_cartridge_requested")
+//                         activeCartridge = null
+//                     }
                 }
 
                 val assistantPrompt by AssistantBridge.pendingPrompt.collectAsState()
@@ -861,7 +860,7 @@ class ConversationFragment : Fragment() {
                         ConversationBar(
                             modelInfo = modelInfo,
                             modelStatus = modelStatus,
-                            activeCartridge = activeCartridge,
+                            
                             onBagClicked = {
                                 if (findNavController().currentDestination?.id == R.id.nav_home) {
                                     findNavController().navigate(
@@ -1181,7 +1180,7 @@ class ConversationFragment : Fragment() {
                                         )
                                     }
                                 },
-                                onCartridgeStoreClicked = { if (findNavController().currentDestination?.id == R.id.nav_home) findNavController().navigate(R.id.action_home_to_cartridge_store) },
+                                
                                 onAiSkillsClicked = {
                                     if (findNavController().currentDestination?.id == R.id.nav_home) {
                                         findNavController().navigate(R.id.action_home_to_ai_skills)
@@ -1192,7 +1191,7 @@ class ConversationFragment : Fragment() {
                                         findNavController().navigate(R.id.action_home_to_settings)
                                     }
                                 },
-                                onFiles = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_file_manager) }, onMedia = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_media_player) }, onCode = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_code_editor) }, onNewChatClicked = {
+                                onFiles = { scope.launch { drawerState.close() };  }, onMedia = { scope.launch { drawerState.close() };  }, onCode = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_code_editor) }, onNewChatClicked = {
                                     viewModel.newConversation()
                                 }
                             )
@@ -1243,7 +1242,6 @@ class ConversationFragment : Fragment() {
                                         }
                                     }
                                 },
-                                onCartridgeStoreClicked = { scope.launch { drawerState.close(); if (findNavController().currentDestination?.id == R.id.nav_home) findNavController().navigate(R.id.action_home_to_cartridge_store) } },
                                 onAiSkillsClicked = {
                                     scope.launch {
                                         drawerState.close()
@@ -1260,7 +1258,7 @@ class ConversationFragment : Fragment() {
                                         }
                                     }
                                 },
-                                onFiles = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_file_manager) }, onMedia = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_media_player) }, onCode = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_code_editor) }, onNewChatClicked = {
+                                onFiles = { scope.launch { drawerState.close() };  }, onMedia = { scope.launch { drawerState.close() };  }, onCode = { scope.launch { drawerState.close() }; findNavController().navigate(R.id.nav_code_editor) }, onNewChatClicked = {
                                     scope.launch {
                                         drawerState.close()
                                         viewModel.newConversation()

@@ -29,7 +29,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.druk.ai_offline_llm.MainActivity
-import com.druk.ai_offline_llm.cartridge.CartridgeManager
 
 class AssistantVoiceInteractionSessionService : VoiceInteractionSessionService() {
     override fun onNewSession(args: Bundle?): VoiceInteractionSession {
@@ -73,14 +72,9 @@ class AssistantVoiceInteractionSession(context: Context) : VoiceInteractionSessi
             setPadding(dp(18), dp(14), dp(18), dp(16))
         }
 
-        val activeCart = CartridgeManager.getActiveCartridge(context)
         val badgeText = TextView(context).apply {
-            text = if (activeCart != null) {
-                "● 100% OFFLINE  ·  ตลับ: ${activeCart.name}"
-            } else {
-                "● 100% OFFLINE ASSISTANT"
-            }
-            setTextColor(if (activeCart != null) Color.parseColor("#4ADE80") else Color.parseColor("#93C5FD"))
+            text = "● 100% OFFLINE ASSISTANT"
+            setTextColor(Color.parseColor("#93C5FD"))
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 1

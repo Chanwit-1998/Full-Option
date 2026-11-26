@@ -90,10 +90,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.graphics.Color
 import com.druk.ai_offline_llm.R
-import com.druk.ai_offline_llm.cartridge.AiCartridge
 import androidx.compose.material.icons.outlined.Info
-import com.druk.ai_offline_llm.cartridge.CartridgeDetailDialog
-import com.druk.ai_offline_llm.cartridge.CartridgeManager
 import com.druk.ai_offline_llm.models.ModelCapabilityIcons
 import com.druk.ai_offline_llm.models.ModelInfo
 import com.druk.ai_offline_llm.models.ModelInfoProvider
@@ -129,15 +126,8 @@ fun ModelsScreen(
     onCancelMigration: () -> Unit,
     mode: ModelsScreenMode = ModelsScreenMode.ALL,
     activeModelFilename: String? = null,
-    installedCartridges: List<AiCartridge> = emptyList(),
-    activeCartridgeId: String? = null,
-    cartridgeFolderPath: String = "",
-    onChangeCartridgeFolderClick: () -> Unit = {},
-    onInsertCartridge: (AiCartridge) -> Unit = {},
-    onEjectCartridge: () -> Unit = {},
-    onInstallCustomCartridge: (AiCartridge) -> Unit = {},
-    onRemoveCartridge: (String) -> Unit = {},
-    onOpenCartridgeStoreClick: () -> Unit = {},
+    
+    
     onSelectModel: ((ModelInfo) -> Unit)? = null,
     onUnloadModel: (() -> Unit)? = null,
     onOpenStoreClick: (() -> Unit)? = null,
@@ -200,15 +190,6 @@ fun ModelsScreen(
             snackbarHostState = snackbarHostState,
             mode = mode,
             activeModelFilename = activeModelFilename,
-            installedCartridges = installedCartridges,
-            activeCartridgeId = activeCartridgeId,
-            cartridgeFolderPath = cartridgeFolderPath,
-            onChangeCartridgeFolderClick = onChangeCartridgeFolderClick,
-            onInsertCartridge = onInsertCartridge,
-            onEjectCartridge = onEjectCartridge,
-            onInstallCustomCartridge = onInstallCustomCartridge,
-            onRemoveCartridge = onRemoveCartridge,
-            onOpenCartridgeStoreClick = onOpenCartridgeStoreClick,
             onSelectModel = onSelectModel,
             onUnloadModel = onUnloadModel,
             onOpenStoreClick = onOpenStoreClick,
@@ -252,15 +233,8 @@ fun ModelsContent(
     modifier: Modifier = Modifier,
     mode: ModelsScreenMode = ModelsScreenMode.ALL,
     activeModelFilename: String? = null,
-    installedCartridges: List<AiCartridge> = emptyList(),
-    activeCartridgeId: String? = null,
-    cartridgeFolderPath: String = "",
-    onChangeCartridgeFolderClick: () -> Unit = {},
-    onInsertCartridge: (AiCartridge) -> Unit = {},
-    onEjectCartridge: () -> Unit = {},
-    onInstallCustomCartridge: (AiCartridge) -> Unit = {},
-    onRemoveCartridge: (String) -> Unit = {},
-    onOpenCartridgeStoreClick: () -> Unit = {},
+    
+    
     onSelectModel: ((ModelInfo) -> Unit)? = null,
     onUnloadModel: (() -> Unit)? = null,
     onOpenStoreClick: (() -> Unit)? = null,
@@ -271,14 +245,9 @@ fun ModelsContent(
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
     var downloadChoiceModel by remember { mutableStateOf<ModelInfo?>(null) }
     var bagTab by remember { mutableIntStateOf(0) }
-    var showCreateCartridgeDialog by remember { mutableStateOf(false) }
-    var inspectingBagCartridge by remember { mutableStateOf<AiCartridge?>(null) }
     val bagContext = LocalContext.current
-    val importCartridgeLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            CartridgeManager.importFromUri(bagContext, uri)
                 .onSuccess { imported ->
-                    onInstallCustomCartridge(imported)
                     Toast.makeText(bagContext, "นำเข้าตลับ ${imported.name} สำเร็จ!", Toast.LENGTH_SHORT).show()
                 }
                 .onFailure { Toast.makeText(bagContext, "ไฟล์ตลับไม่ถูกต้อง: ${it.message}", Toast.LENGTH_LONG).show() }
@@ -375,10 +344,7 @@ fun ModelsContent(
                             )
                             CompactFolderCard(
                                 title = "โฟลเดอร์ตลับข้อมูล",
-                                path = cartridgeFolderPath.ifBlank { "โฟลเดอร์แอป/cartridges" },
-                                subtitle = "ตลับ: ${installedCartridges.size} ตลับ",
                                 icon = Icons.Outlined.Extension,
-                                onChangeClick = onChangeCartridgeFolderClick,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -419,7 +385,6 @@ fun ModelsContent(
                                 ) {
                                     Icon(Icons.Outlined.Extension, null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("ตลับข้อมูล (${installedCartridges.size})", fontWeight = FontWeight.Bold)
                                 }
                             } else {
                                 OutlinedButton(
@@ -429,7 +394,6 @@ fun ModelsContent(
                                 ) {
                                     Icon(Icons.Outlined.Extension, null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("ตลับข้อมูล (${installedCartridges.size})")
                                 }
                             }
                         }
@@ -445,13 +409,11 @@ fun ModelsContent(
                 }
 
                 if (mode == ModelsScreenMode.DOWNLOADED_ONLY && bagTab == 1) {
-                    item(key = "cartridge_bag_actions", span = { GridItemSpan(maxLineSpan) }) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             FilledTonalButton(
-                                onClick = onOpenCartridgeStoreClick,
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(Icons.Outlined.Download, null, modifier = Modifier.size(18.dp))
@@ -464,7 +426,6 @@ fun ModelsContent(
                                 )
                             }
                             OutlinedButton(
-                                onClick = { importCartridgeLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) },
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(Icons.Outlined.Download, null, modifier = Modifier.size(18.dp))
@@ -475,11 +436,9 @@ fun ModelsContent(
                     }
 
                     items(
-                        items = installedCartridges,
                         key = { "bag_cart_" + it.id },
                         span = { GridItemSpan(maxLineSpan) }
                     ) { cart ->
-                        val isInserted = activeCartridgeId == cart.id
                         val accent = Color(cart.colorHex)
                         Card(
                             shape = RoundedCornerShape(16.dp),
@@ -506,7 +465,6 @@ fun ModelsContent(
                                         Text("${cart.category} • คลังความรู้ ${cart.knowledge.size} หัวข้อ", style = MaterialTheme.typography.labelSmall, color = accent)
                                     }
                                     FilledTonalIconButton(
-                                        onClick = { onRemoveCartridge(cart.id) },
                                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                                             containerColor = MaterialTheme.colorScheme.errorContainer,
                                             contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -524,7 +482,6 @@ fun ModelsContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     OutlinedButton(
-                                        onClick = { inspectingBagCartridge = cart },
                                         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                                     ) {
                                         Icon(Icons.Outlined.Info, null, modifier = Modifier.size(16.dp))
@@ -533,7 +490,6 @@ fun ModelsContent(
                                     }
                                     if (isInserted) {
                                         OutlinedButton(
-                                            onClick = onEjectCartridge,
                                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.7f)),
                                             colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
                                         ) {
@@ -542,7 +498,6 @@ fun ModelsContent(
                                             Text("ถอดตลับออก")
                                         }
                                     } else {
-                                        FilledTonalButton(onClick = { onInsertCartridge(cart) }) {
                                             Icon(Icons.Outlined.Extension, null, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Text("เสียบตลับใช้งาน")
@@ -875,22 +830,14 @@ fun ModelsContent(
         )
     }
 
-    inspectingBagCartridge?.let { cart ->
-        val isInserted = activeCartridgeId == cart.id
-        CartridgeDetailDialog(
-            cartridge = cart,
-            onDismiss = { inspectingBagCartridge = null },
             primaryActionLabel = if (isInserted) null else "เสียบตลับใช้งาน",
-            onPrimaryAction = if (isInserted) null else { { onInsertCartridge(cart) } }
         )
     }
 
-    if (showCreateCartridgeDialog) {
         var cName by remember { mutableStateOf("") }
         var cDesc by remember { mutableStateOf("") }
         var cKnowledge by remember { mutableStateOf("") }
         AlertDialog(
-            onDismissRequest = { showCreateCartridgeDialog = false },
             title = { Text("สร้างตลับข้อมูลใหม่") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -902,23 +849,18 @@ fun ModelsContent(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onInstallCustomCartridge(
-                            AiCartridge(
                                 id = "custom_${System.currentTimeMillis()}",
                                 name = cName.trim(),
                                 description = cDesc.trim().ifBlank { "ตลับกำหนดเอง" },
-                                knowledge = AiCartridge.parseRawKnowledgeText(cKnowledge.trim()),
                                 colorHex = 0xFF00E5FF,
                                 isCustom = true
                             )
                         )
-                        showCreateCartridgeDialog = false
                         Toast.makeText(bagContext, "สร้างตลับเรียบร้อย!", Toast.LENGTH_SHORT).show()
                     },
                     enabled = cName.isNotBlank() && cKnowledge.isNotBlank()
                 ) { Text("บันทึกตลับ") }
             },
-            dismissButton = { TextButton(onClick = { showCreateCartridgeDialog = false }) { Text("ยกเลิก") } }
         )
     }
 }
